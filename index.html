@@ -735,6 +735,7 @@
                 for (let i = 0; i < 10; i++) {
                     const card = getRandomCard();
                     multiDrawResults.push(card);
+                    addToHistory(card);
                 }
                 
                 // 显示跳过按钮
@@ -826,7 +827,6 @@
             const card = multiDrawResults[currentMultiIndex];
             
             showCardFullscreen(card, 'multi');
-            addToHistory(card);
         }
 
         // 显示下一张十连卡片
