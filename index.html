@@ -419,6 +419,8 @@
                         <div class="card-back-content">
                             <div class="card-logo">🎴</div>
                             <div class="card-back-text">濑月夢纪语音抽卡</div>
+                            <div>图片加载进度：<span id="imgProgress"></span></div>
+                            <div>音频加载进度：<span id="audioProgress"></span></div>
                         </div>
                     </div>
                     
@@ -718,7 +720,8 @@
         const skipMultiBtn = document.getElementById('skipMultiBtn');
         const multiResult = document.getElementById('multiResult');
         const historyList = document.getElementById('historyList');
-
+        const imgProgress = document.getElementById('imgProgress');
+        const audioProgress = document.getElementById('audioProgress');
         // 初始化
         function init() {
             singleDrawBtn.addEventListener('click', () => drawCard('single'));
@@ -798,6 +801,38 @@
             };
         }
 
+        function loadProgress(url,progressCallback){
+            return fetch(url)
+                .then((response)=>{
+                    if (!response.ok) {
+                        throw new Error(`HTTP error! status: ${response.status}`);
+                    }
+                    
+                    const contentLength = response.headers.get('content-length');
+                    const total = parseInt(contentLength, 10);
+                    let loaded = 0;
+                    // 使用 ReadableStream 监控进度
+                    const reader = response.body.getReader();
+                    const chunks = [];
+
+                    return function whileRead(){
+                        return reader.read()
+                            .then(({done, value})=>{
+                                if (done) {
+                                    return
+                                } ;
+                                loaded += value.length;
+                        
+                                if (progressCallback) {
+                                    const percent = Math.round((loaded / total) * 100);
+                                    progressCallback(percent, loaded, total);
+                                }
+                                return whileRead()
+                            })
+                    }()
+                })
+        }
+
         // 全屏显示卡片
         function showCardFullscreen(card, type) {
             // 重置卡片为背面
@@ -827,15 +862,18 @@
             
             // 显示全屏容器
             cardFullscreen.classList.add('active');
-            Promise.all([fetch(card.image[0]),fetch(card.audio)])
+            Promise.all([loadProgress(card.image[0], (percent, loaded, total)=>{imgProgress.innerText = `${percent}%`}),loadProgress(card.audio,(percent, loaded, total)=>{audioProgress.innerText = `${percent}%`})])
+                // .then((responseList)=>{
+                //     return Promise.all([responseList[0].blob(),responseList[1].blob()])
+                // })
                 .then(()=> {
                     // 播放翻转动画
                     cardInner.classList.add('flip');
                     // 在翻转完成后播放音效
                     playAudio(card.audio);
                 })
-                .catch(()=>{
-                    alert("卧槽 图片或音频加载失败了")
+                .catch((e)=>{
+                    alert("卧槽 图片或音频加载失败了\n" + e)
 
                     // 播放翻转动画
                     cardInner.classList.add('flip');
