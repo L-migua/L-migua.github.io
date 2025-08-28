@@ -722,6 +722,8 @@
         const historyList = document.getElementById('historyList');
         const imgProgress = document.getElementById('imgProgress');
         const audioProgress = document.getElementById('audioProgress');
+
+        const imgLoadForDecode = document.createElement("img")
         // 初始化
         function init() {
             singleDrawBtn.addEventListener('click', () => drawCard('single'));
@@ -863,9 +865,13 @@
             // 显示全屏容器
             cardFullscreen.classList.add('active');
             Promise.all([loadProgress(card.image[0], (percent, loaded, total)=>{imgProgress.innerText = `${percent}%`}),loadProgress(card.audio,(percent, loaded, total)=>{audioProgress.innerText = `${percent}%`})])
-                // .then((responseList)=>{
-                //     return Promise.all([responseList[0].blob(),responseList[1].blob()])
-                // })
+                .then((responseList)=>{
+                    return new Promise((imgDecodeDone)=>{
+                        // webp图片在移动端似乎加载完成后还需要一个解码过程，这个过程有点影响体验，这里使用一个img标签事先解码好
+                        imgLoadForDecode.onload = imgDecodeDone
+                        imgLoadForDecode.src = card.image[0]
+                    })
+                })
                 .then(()=> {
                     // 播放翻转动画
                     cardInner.classList.add('flip');
