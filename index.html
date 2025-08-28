@@ -906,7 +906,7 @@
             multiResult.classList.add('active');
             multiResult.innerHTML = '';
             
-            multiDrawResults.forEach(card => {
+            multiDrawResults.sort((a,b) => b.rarity - a.rarity).forEach(card => {
                 const cardElement = document.createElement('div');
                 cardElement.className = `multi-card ${card.rarity === '5' ? 'five-star' : ''}`;
                 cardElement.style.backgroundImage = card.image.map(url => `url('${url}')`).join(',');
