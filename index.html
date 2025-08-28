@@ -585,7 +585,6 @@
       {
         "name": "甜蜜回应",
         "image": [
-          "https://i.imgs.ovh/2025/08/29/BbFjx.png",
           "./png/00055-1920844438.png"
         ],
         "audio": "./mp3/我也喜欢你呀宝宝.wav"
@@ -593,7 +592,6 @@
       {
         "name": "温柔答应",
         "image": [
-          "https://i.imgs.ovh/2025/08/29/BbrGL.png",
           "./png/00049-3448258678.png"
         ],
         "audio": "./mp3/好的宝宝.wav"
@@ -601,7 +599,6 @@
       {
         "name": "深情告白",
         "image": [
-          "https://i.imgs.ovh/2025/08/29/BbS6M.png",
           "./png/00060-1384665409.png"
         ],
         "audio": "./mp3/我好喜欢你我喜欢你好久了你知道不.wav"
@@ -614,7 +611,6 @@
       {
         "name": "初次见面",
         "image": [
-          "https://i.imgs.ovh/2025/08/29/BbcS1.png",
           "./png/00043-3535785748.png"
         ],
         "audio": "./mp3/我们才第一天见面.wav"
@@ -622,7 +618,6 @@
       {
         "name": "幻想时刻",
         "image": [
-          "https://i.imgs.ovh/2025/08/29/BbLlr.png",
           "./png/00065-3504180296.png"
         ],
         "audio": "./mp3/现在是幻想时刻.wav"
@@ -630,7 +625,6 @@
       {
         "name": "小男友烦恼",
         "image": [
-          "https://i.imgs.ovh/2025/08/29/BbfMn.png",
           "./png/00046-4039055635.png"
         ],
         "audio": "./mp3/啊小男友吃醋生气怎么办那哎.wav"
@@ -643,7 +637,6 @@
       {
         "name": "好人卡",
         "image": [
-          "https://i.imgs.ovh/2025/08/29/Bbawb.png",
           "./png/00039-666148861.png"
         ],
         "audio": "./mp3/什么意思啊你是个好人.wav"
@@ -651,7 +644,6 @@
       {
         "name": "朋友界限",
         "image": [
-          "https://i.imgs.ovh/2025/08/29/BbZHY.png",
           "./png/00016-1497929218.png"
         ],
         "audio": "./mp3/我只把你当朋友我说你是个好人.wav"
@@ -659,7 +651,6 @@
       {
         "name": "明年再说",
         "image": [
-          "https://i.imgs.ovh/2025/08/29/Bby7g.png",
           "./png/00015-2509351029.png"
         ],
         "audio": "./mp3/明年明年再说.wav"
@@ -667,7 +658,6 @@
       {
         "name": "身份质疑",
         "image": [
-          "https://i.imgs.ovh/2025/08/29/BbOA0.png",
           "./png/00015-2174457448.png"
         ],
         "audio": "./mp3/你是谁.wav"
@@ -675,7 +665,6 @@
       {
         "name": "厌恶表达",
         "image": [
-          "https://i.imgs.ovh/2025/08/29/BVij6.png",
           "./png/00014-4086014375.png"
         ],
         "audio": "./mp3/去死吧你.wav"
@@ -683,7 +672,6 @@
       {
         "name": "鄙视",
         "image": [
-          "https://i.imgs.ovh/2025/08/29/BV3hp.png",
           "./png/00013-3771896979.png"
         ],
         "audio": "./mp3/你也配.wav"
@@ -691,7 +679,6 @@
       {
         "name": "宅宅批判",
         "image": [
-          "https://i.imgs.ovh/2025/08/29/BVwS9.png",
           "./png/00013-1113505741.png"
         ],
         "audio": "./mp3/就是这样恶心私宅真恶心.wav"
@@ -699,7 +686,6 @@
       {
         "name": "二次元厌恶",
         "image": [
-          "https://i.imgs.ovh/2025/08/29/BV1Mc.png",
           "./png/00012-2935115470.png"
         ],
         "audio": "./mp3/二次元真恶心喵.wav"
@@ -707,7 +693,6 @@
       {
         "name": "粗暴驱逐",
         "image": [
-          "https://i.imgs.ovh/2025/08/29/BbU7h.png",
           "./png/00011-187898591.png"
         ],
         "audio": "./mp3/听明白就滚远点.wav"
@@ -842,12 +827,22 @@
             
             // 显示全屏容器
             cardFullscreen.classList.add('active');
+            Promise.all([fetch(card.image[0]),fetch(card.audio)])
+                .then(()=> {
+                    // 播放翻转动画
+                    cardInner.classList.add('flip');
+                    // 在翻转完成后播放音效
+                    playAudio(card.audio);
+                })
+                .catch(()=>{
+                    alert("卧槽 图片或音频加载失败了")
+
+                    // 播放翻转动画
+                    cardInner.classList.add('flip');
+                    // 在翻转完成后播放音效
+                    playAudio(card.audio);
+                })
             
-            // 播放翻转动画
-            
-            cardInner.classList.add('flip');
-            // 在翻转完成后播放音效
-            playAudio(card.audio);
             
             
             // 如果是单抽，修改按钮文字
