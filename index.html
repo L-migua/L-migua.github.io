@@ -722,14 +722,15 @@
             
             isDrawing = true;
             isMultiDraw = type === 'multi';
-            
+            multiDrawResults = [];
+            currentMultiIndex = 0;
             if (type === 'single') {
                 const card = getRandomCard();
+                
                 showCardFullscreen(card, type);
                 addToHistory(card);
             } else {
-                multiDrawResults = [];
-                currentMultiIndex = 0;
+                
                 
                 for (let i = 0; i < 10; i++) {
                     const card = getRandomCard();
